@@ -1,0 +1,40 @@
+import java.io.*;
+public class Test{
+	public static void main(String[] args) throws Exception {
+		FileCopy fc = new FileCopy("e:\\c.txt","e:\\copy.txt");
+		fc.copy();
+		fc.close();  //不关闭流拷贝结果为空
+	}
+}
+class FileCopy{
+	private Reader reader;
+	private Writer writer;
+	private File fromFile ;
+	private File toFile;
+	public FileCopy(String fromPath,String toPath) throws Exception{
+		fromFile = new File(fromPath);
+		toFile = new File(toPath);
+		if(!fromFile.exists()){
+			if(!fromFile.getParentFile().exists())
+				fromFile.mkdirs();
+			fromFile.createNewFile();
+		}
+		if(!toFile.exists()){
+			if(!toFile.getParentFile().exists())
+				toFile.mkdirs();
+			toFile.createNewFile();
+		}
+		reader = new FileReader(fromFile);
+		writer = new FileWriter(toFile);
+	}
+	public void copy() throws Exception{
+		char[] buf = new char[(int)fromFile.length()];
+		int len = reader.read(buf);
+		String result = new String(buf,0,len);
+		writer.write(result);
+	}
+	public void close() throws IOException{
+		reader.close();
+		writer.close();
+	}
+}
