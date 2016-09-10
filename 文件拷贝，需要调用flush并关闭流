@@ -1,14 +1,16 @@
 import java.io.*;
 public class Test{
 	public static void main(String[] args) throws Exception {
-		FileCopy fc = new FileCopy("e:\\c.txt","e:\\copy.txt");
+		FileCopy fc = new FileCopy("e:\\4简单查询.flv","e:\\copy.flv");
 		fc.copy();
-		fc.close();  //不关闭流拷贝结果为空
+		fc.close();
 	}
 }
 class FileCopy{
-	private Reader reader;
-	private Writer writer;
+//	private Reader reader;
+//	private Writer writer;
+	private InputStream reader;                  //拷贝视频、图片等类型时，字符流就是字节流+编码表，若用字符流去复制会默认将图片的
+	private OutputStream writer;		     //字节码格式进行编码，  所以会导致复制后文件与源文件不一致。
 	private File fromFile ;
 	private File toFile;
 	public FileCopy(String fromPath,String toPath) throws Exception{
@@ -24,14 +26,24 @@ class FileCopy{
 				toFile.mkdirs();
 			toFile.createNewFile();
 		}
-		reader = new FileReader(fromFile);
-		writer = new FileWriter(toFile);
+//		reader = new FileReader(fromFile);
+//		writer = new FileWriter(toFile);
+		reader = new FileInputStream(fromFile);
+		writer = new FileOutputStream(toFile);
 	}
 	public void copy() throws Exception{
-		char[] buf = new char[(int)fromFile.length()];
-		int len = reader.read(buf);
-		String result = new String(buf,0,len);
-		writer.write(result);
+		byte[] buf = new byte[100];     //拷贝大文件时若定义数组大小为文件大小会出现outofmemoryerror
+		int len;
+		while((len=reader.read(buf))!=-1){
+			writer.write(buf);
+		}
+//		while((len = reader.read(buf)) !=-1){
+////			len=reader.read(buf);
+//			String result = new String(buf);
+//			writer.write(result);
+//		}
+//		String result = new String(buf);
+//		writer.write(result);
 	}
 	public void close() throws IOException{
 		reader.close();
