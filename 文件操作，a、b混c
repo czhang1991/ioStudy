@@ -1,0 +1,53 @@
+import java.io.*;
+import java.util.*;
+public class Test{
+	public static void main(String[] args) {
+		Mix mm = new Mix("e:\\a.txt","e:\\b.txt",new char[]{'\n'},new char[]{'\n',' '});
+		mm.mix();
+	}
+}
+
+class Mix{
+	private OutputStream out;
+	private InputStream inputa;
+	private InputStream inputb;
+	private byte[] b = new byte[1];
+	private ArrayList array = new ArrayList();
+	private ArrayList array1 = new ArrayList();
+	public Mix(String filename1,String filename2,char[] seperators1,char[] seperators2){  //要混合的文件a、b，分别使用的分隔符
+		try {
+			toList(seperators1,array);
+			toList(seperators2,array1);
+			out = new FileOutputStream(new File("e:\\c.txt"));
+			inputa = new FileInputStream(filename1);
+			inputb = new FileInputStream(filename2);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	public void mix(){  //将文件a、b按每个文件一个字符的规则进行混合
+		try {
+			while(inputa.read(b)!=-1){
+				if(!(array.contains(new Character((char) b[0])))){  //读取的不是分隔符则写入新文件中
+					out.write(b);
+				}else {
+					out.write(' ');
+					while(inputb.read(b)!=-1&&!(array1.contains(new Character((char) b[0])))){  //读取的是分隔符则读另一文件
+						out.write(b);
+					}
+					out.write(' ');
+				}
+			}
+			while(inputb.read(b)!=-1){
+				out.write(b);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void toList(char[] c,List list){   //将分隔符字符转成包装类并加入集合中，方便判断
+		for(int i=0; i<c.length; i++){
+			list.add(new Character(c[i]));}
+	}
+}
