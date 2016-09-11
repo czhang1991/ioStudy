@@ -1,0 +1,23 @@
+import java.io.*;
+public class Test{
+	public static void main(String[] args) throws Exception {
+		System.out.println(new TrimString().getSubStr("我ABC汗", 6));
+	}
+}
+
+class TrimString{
+	private int num=0;
+	private boolean flag=false;
+	public String getSubStr(String str,int n) throws UnsupportedEncodingException{
+		byte b[] = str.getBytes("GBK");
+		for(int i=0; i<n; i++){
+			if(b[i]<0&&flag==false){
+				flag=true;
+			} else{
+				num++;
+				flag = false;
+			}
+		}
+		return str.substring(0, num);
+	}
+}
