@@ -1,0 +1,89 @@
+import java.util.*;
+public class Test{
+	public static void main(String[] args) {
+		Node n = new Node();
+		n.store(10);
+		n.store(124);
+		n.store(2);
+		n.store(234);
+		n.store(32);
+		n.preList();
+		n.print();
+	}
+	
+}
+class Node{
+	private Node head;
+	private Node left;
+	private Node right;
+	private int data;
+	private static List list = new ArrayList();
+	public Node(){};
+	public Node(int data){
+		this.data = data;
+	}
+	
+	public void store(int data){
+//		if(head ==null){
+//			head=new Node(data);
+//		}
+		if(data<this.data){
+			if(this.left==null){
+				this.left = new Node(data);
+			}else{
+				this.left.store(data);
+			}
+		} else if(data>this.data){
+			if(this.right==null){
+				this.right = new Node(data);
+			}else{
+				this.right.store(data);
+			}
+		}
+	}
+	
+	public boolean contain(int data){
+		if(data==this.data){
+			return true;
+		}else if(data>this.data){
+			if(this.right==null)
+				return false;
+			return this.right.contain(data);
+		}else {
+			if(this.left==null)
+				return false;
+			return this.left.contain(data);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void preList(){
+//		System.out.print(this.data+",");
+//		if(left!=null) left.preList();
+//		if(right!=null) right.preList();
+		list.add(this.data);
+		if(left!=null) left.preList();
+		if(right!=null) right.preList();
+	}
+	public void middleList(){
+//		if(left!=null) left.preList();
+//		System.out.print(this.data+",");
+//		if(right!=null) right.preList();
+		if(left!=null) left.preList();
+		list.add(this.data);
+		if(right!=null) right.preList();
+	}
+	public void afterList(){
+//		if(left!=null) left.preList();
+//		System.out.print(this.data+",");
+//		if(right!=null) right.preList();
+		if(left!=null) left.preList();
+		if(right!=null) right.preList();
+		list.add(this.data);
+	}
+	public void print(){
+		for(Object i:list){
+			System.out.println(i);
+		}
+	}
+}
