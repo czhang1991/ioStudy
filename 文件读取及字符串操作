@@ -1,0 +1,80 @@
+import java.io.*;
+import java.util.*;
+
+/**
+ * 从规定格式文件中读取所有姓名并按重复次数排序并打印：
+ * 		1,张三,28
+		2,李四,35
+		3,张三,28
+		4,王五,35
+ * 
+ * 	1、reader读取并按分隔符分成字符串数组；
+ * 	2、map.get(str=String.split(",")[2])==null，
+ * 		map.put(str,1),elsemap.put(str,+1)；
+ * 	3、实现按照值排序的TreeMap
+ * 	4、输出键值对
+ * 
+ * 
+ */
+public class Test{
+	public static void main(String[] args) throws Exception {
+		SortMessage sm = new SortMessage("e:"+File.separator+"a.txt");
+		sm.sortedMessage();
+	}
+}
+class SortMessage{
+	private Reader reader;
+	private BufferedReader br;
+	private Map<String,Integer> map;
+	private String str;
+//	private StringBuffer str=new StringBuffer("");
+	public SortMessage(String file) throws Exception{
+		reader = new FileReader(file);
+		br = new BufferedReader(reader);
+		map = new HashMap<String,Integer>();
+//	}
+//	public void getMessage() throws IOException{
+//		char[] buf = new char[1];
+		while((str=br.readLine())!=null){
+			
+//			if(buf[0]!='\n'){
+//				str.append(buf[0]);
+//			}else {
+				addToMap();
+//			}
+		}
+//		addToMap();     //读完最后一行，由于后面没有'\n'，else语句不会执行
+						//在回到while判断，此时read（）为-1，故最后一行没有加到map中
+		   				//需要在执行一次addToMap加进去
+	}
+	
+	public void addToMap(){
+//		String str0=str.toString().split(",")[1];
+		String str0;
+		String[] str1 = str.split(",");
+		if(str1.length==3){
+			str0=str1[1];
+			if(map.get(str0)==null){
+				map.put(str0, 1);
+			}else{
+				map.put(str0, map.get(str0)+1);
+			}
+		}
+//		str.delete(0, str.length());
+	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void sortedMessage(){
+		TreeMap tm = new TreeMap(new Comparator<String>() {
+			public int compare(String sb1, String sb2) {
+				if(map.get(sb1)>=map.get(sb2)){
+					return  -1;
+				}else {
+					return 1;
+				}
+			}
+			
+		});
+		tm.putAll(map);
+		System.out.println(tm);
+	}
+}
